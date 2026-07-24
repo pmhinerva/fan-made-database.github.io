@@ -106,23 +106,24 @@ function monsterIconPath(m){ return `images/monsters/${esc(encodeURIComponent(m.
 /* Cada alma tem ícone próprio (images/souls/), e a cor do cristal indica o
    nível: azul = normal, roxo = mini-chefe, vermelho = MVP. Poucas almas não
    têm ícone e caem no genérico. */
-const SOUL_ICON = 'https://i.imgur.com/ePtDthB.png';
 const SOUL_ICON_IDS = new Set((window.DB_SOULICONS || []).map(Number));
 function soulIconPath(id){
-  return SOUL_ICON_IDS.has(Number(id)) ? `images/souls/${encodeURIComponent(id)}.png` : SOUL_ICON;
+  /* sem arquivo local -> '' faz o iconOrFallback mostrar o glifo, sem host externo */
+  return SOUL_ICON_IDS.has(Number(id)) ? `images/souls/${encodeURIComponent(id)}.png` : '';
 }
 function isSoul(it){ return Number(it.id) >= 2000000; }
 /* As 487 almas vêm gravadas como tipo "Carta". Para filtro e exibição elas são
    uma categoria própria — use sempre isto no lugar de it.tipo. */
 function itemTipo(it){ return isSoul(it) ? 'Alma' : (it.tipo || ''); }
+/* Ícones locais em images/items/ (cartas usam a arte de coleção, os demais o
+   ícone pequeno; ambos gravados como {id}.png). Itens sem arquivo caem no
+   glifo via onerror. Almas ficam em images/souls/. */
 function itemIconPath(it){
   if(isSoul(it)) return soulIconPath(it.id);
-  const id = esc(encodeURIComponent(it.id));
-  if(it.tipo === 'Carta') return `https://game.ragnaplace.com/ro/bro/card/${id}.webp`;
-  return `https://game.ragnaplace.com/ro/laro/item/${id}.webp`;
+  return `images/items/${esc(encodeURIComponent(it.id))}.png`;
 }
 function mapImagePath(codigo){
-  return codigo ? `https://ragnarokdatabase.com/assets/images/maps/${esc(encodeURIComponent(codigo))}.png` : '';
+  return codigo ? `images/maps/${esc(encodeURIComponent(codigo))}.png` : '';
 }
 function mapIconPath(mp){ return mapImagePath(mp.codigo); }
 
