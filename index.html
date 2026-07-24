@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" id="themeColor" content="#070c15">
+<script>
+/* Aplica o tema antes da primeira pintura — se isso rodasse no app.js (fim do
+   body) a página piscaria no tema errado a cada carregamento. */
+(function(){
+  var t;
+  try { t = localStorage.getItem('theme'); } catch(e){}
+  if(t !== 'light' && t !== 'dark'){
+    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+  var m = document.getElementById('themeColor');
+  if(m) m.setAttribute('content', t === 'light' ? '#e8eef7' : '#070c15');
+})();
+</script>
+<title>Fan Made Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="images/logo.png">
+</head>
+<body>
+
+<div class="bg-image"></div>
+<div class="bg-glow"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <img class="brand-logo" src="images/logo.png" alt="Database Fan Made — Ragnarok Online">
+    <div class="brand-text">
+      <span class="brand-title">FAN MADE</span>
+      <span class="brand-sub">Database</span>
+    </div>
+  </div>
+
+  <div class="global-search">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="globalSearch" type="text" placeholder="Buscar monstros, itens ou mapas..." autocomplete="off">
+    <div id="globalResults" class="global-results hidden"></div>
+  </div>
+
+  <button class="theme-toggle" id="themeToggle" type="button" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">
+    <span class="ic-sun">☀</span><span class="ic-moon">☾</span>
+  </button>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="monstros">
+      <img class="tab-ic" src="images/monsters/1002.gif" alt="" aria-hidden="true"> Monstros
+    </button>
+    <button class="tab-btn" data-tab="itens">
+      <img class="tab-ic" src="https://game.ragnaplace.com/ro/laro/item/610.webp" alt="" aria-hidden="true"> Itens
+    </button>
+    <button class="tab-btn" data-tab="mapas">
+      <img class="tab-ic" src="https://game.ragnaplace.com/ro/laro/item/12581.webp" alt="" aria-hidden="true"> Mapas
+    </button>
+    <button class="tab-btn" data-tab="colecoes">
+      <img class="tab-ic" src="https://game.ragnaplace.com/ro/laro/item/12208.webp" alt="" aria-hidden="true"> Col. Mapas
+    </button>
+    <button class="tab-btn" data-tab="cartas">
+      <img class="tab-ic" src="https://game.ragnaplace.com/ro/laro/item/616.webp" alt="" aria-hidden="true"> Col. Cartas
+    </button>
+    <button class="tab-btn" data-tab="craft">
+      <img class="tab-ic" src="https://game.ragnaplace.com/ro/laro/item/5045.webp" alt="" aria-hidden="true"> Craft Hats
+    </button>
+  </nav>
+</header>
+
+<main id="app">
+
+  <!-- MONSTROS VIEW -->
+  <section class="view" id="view-monstros" data-view="monstros">
+    <div class="toolbar">
+      <div class="toolbar-count"><span id="monCount">0</span> monstros</div>
+      <div class="toolbar-filters">
+        <select id="monRaca"><option value="">Raça — todas</option></select>
+        <select id="monElemento"><option value="">Elemento — todos</option></select>
+        <select id="monTamanho"><option value="">Tamanho — todos</option></select>
+        <select id="monSort">
+          <option value="id">Ordenar: ID</option>
+          <option value="nome">Ordenar: Nome</option>
+          <option value="nivel">Ordenar: Nível</option>
+          <option value="hp">Ordenar: HP</option>
+          <option value="exp_base">Ordenar: EXP Base</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="monGrid"></div>
+    <button class="load-more" id="monLoadMore">Carregar mais ▾</button>
+  </section>
+
+  <!-- ITENS VIEW -->
+  <section class="view hidden" id="view-itens" data-view="itens">
+    <div class="toolbar">
+      <div class="toolbar-count"><span id="itemCount">0</span> itens</div>
+      <div class="toolbar-filters">
+        <select id="itemTipo"><option value="">Tipo — todos</option></select>
+        <select id="itemSort">
+          <option value="id">Ordenar: ID</option>
+          <option value="nome">Ordenar: Nome</option>
+          <option value="compra">Ordenar: Preço compra</option>
+          <option value="venda">Ordenar: Preço venda</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="itemGrid"></div>
+    <button class="load-more" id="itemLoadMore">Carregar mais ▾</button>
+  </section>
+
+  <!-- MAPAS VIEW -->
+  <section class="view hidden" id="view-mapas" data-view="mapas">
+    <div class="toolbar">
+      <div class="toolbar-count"><span id="mapCount">0</span> mapas</div>
+      <div class="toolbar-filters">
+        <select id="mapSort">
+          <option value="codigo">Ordenar: Código</option>
+          <option value="nome">Ordenar: Nome</option>
+          <option value="total_mobs">Ordenar: Total de mobs</option>
+          <option value="especies">Ordenar: Espécies</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-maps" id="mapGrid"></div>
+    <button class="load-more" id="mapLoadMore">Carregar mais ▾</button>
+  </section>
+
+  <!-- COLEÇÕES VIEW -->
+  <section class="view hidden" id="view-colecoes" data-view="colecoes">
+    <div class="toolbar">
+      <div class="toolbar-count"><span id="colCount">0</span> coleções</div>
+      <div class="toolbar-filters">
+        <select id="colCidade"><option value="">Cidade — todas</option></select>
+        <select id="colSort">
+          <option value="cidade">Ordenar: Cidade</option>
+          <option value="nome">Ordenar: Nome</option>
+          <option value="itens">Ordenar: Nº de itens</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-maps" id="colGrid"></div>
+    <button class="load-more" id="colLoadMore">Carregar mais ▾</button>
+  </section>
+
+  <!-- COLEÇÕES DE CARTAS VIEW -->
+  <section class="view hidden" id="view-cartas" data-view="cartas">
+    <div class="toolbar">
+      <div class="toolbar-count"><span id="cardCount">0</span> coleções de cartas</div>
+      <div class="toolbar-filters">
+        <select id="cardSort">
+          <option value="idx">Ordenar: Nº</option>
+          <option value="nome">Ordenar: Nome</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-maps" id="cardGrid"></div>
+  </section>
+
+  <!-- CRAFT HATS VIEW -->
+  <section class="view hidden" id="view-craft" data-view="craft">
+    <div class="toolbar">
+      <div class="toolbar-count"><span id="craftCount">0</span> receitas de craft</div>
+      <div class="toolbar-filters">
+        <select id="craftSort">
+          <option value="nome">Ordenar: Nome</option>
+          <option value="materiais">Ordenar: Nº de materiais</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-maps" id="craftGrid"></div>
+  </section>
+
+</main>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer">
+  <button class="drawer-back hidden" id="drawerBack">‹ Voltar</button>
+  <button class="drawer-close" id="drawerClose">✕</button>
+  <div class="drawer-content" id="drawerContent"></div>
+</aside>
+
+<footer class="footer">
+  <span>Fan Made Database  ·  Projeto não oficial, sem vínculo com qualquer servidor  ·  Pré-renewal</span>
+</footer>
+
+<script src="data/data.js"></script>
+<script src="data/mapcollection.js"></script>
+<script src="data/cardcollection.js"></script>
+<script src="data/soulicons.js"></script>
+<script src="data/hatcraft.js"></script>
+<script src="data/elementtable.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
