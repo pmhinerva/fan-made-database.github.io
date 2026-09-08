@@ -493,11 +493,10 @@ select:focus, .inline-search:focus{
 .d-icon.card-art img, .d-icon.soul-art img{
   width:100%; height:100%; object-fit:contain; image-rendering:auto;
 }
-/* itens comuns: arte collection é nativa 75x100 — mostra no tamanho real,
-   sem ampliar (evita borrão) */
-.d-icon.item-art{width:96px; height:118px;}
+/* itens comuns: arte collection nativa 75x100, exibida ~30% maior (98x130) */
+.d-icon.item-art{width:120px; height:148px;}
 .d-icon.item-art img{
-  width:75px; height:100px; object-fit:contain; image-rendering:auto;
+  width:98px; height:130px; object-fit:contain; image-rendering:auto;
 }
 .d-title{min-width:0; flex:1 1 220px;}
 .d-name{font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--accent-bright); line-height:1.15;}
