@@ -1032,4 +1032,8 @@ renderList('col');
 renderList('card');
 renderList('craft');
 
+/* Instância: conteúdo HTML pronto (da wiki, saneado) injetado uma vez */
+const instEl = document.getElementById('instContent');
+if(instEl && window.DB_INSTANCE_ESGOTO) instEl.innerHTML = window.DB_INSTANCE_ESGOTO;
+
 })();
