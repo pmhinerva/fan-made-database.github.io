@@ -545,7 +545,7 @@ function buildItemHtml(id){
 
   const html = `
     <div class="d-head">
-      <div class="d-icon ${isSoul(it) ? 'soul-art' : ((it.tipo === 'Carta' || hasCollectionArt(it)) ? 'card-art' : '')}">${iconOrFallback(icon, '?', '')}</div>
+      <div class="d-icon ${isSoul(it) ? 'soul-art' : (it.tipo === 'Carta' ? 'card-art' : (hasCollectionArt(it) ? 'item-art' : ''))}">${iconOrFallback(icon, '?', '')}</div>
       <div class="d-title">
         <div class="d-name">${esc(it.nome)}</div>
         <div class="d-sub">${copyIdHtml(it.id, "")} · ${esc(itemTipo(it))}${it.subtipo ? ' · '+esc(it.subtipo) : ''}${it.posicao ? ' · '+esc(it.posicao) : ''}</div>
