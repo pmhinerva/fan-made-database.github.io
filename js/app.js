@@ -122,6 +122,14 @@ function itemIconPath(it){
   if(isSoul(it)) return soulIconPath(it.id);
   return `images/items/${esc(encodeURIComponent(it.id))}.png`;
 }
+/* Arte grande (ilustração 3:4) do divine-pride, usada SÓ no drawer.
+   Itens/cartas com arte em images/collection/; o resto cai no ícone normal.
+   Almas mantêm o ícone de alma. */
+const COLLECTION_IDS = new Set((window.DB_COLLECTIONIDS || []).map(Number));
+function hasCollectionArt(it){ return !isSoul(it) && COLLECTION_IDS.has(Number(it.id)); }
+function itemDrawerImg(it){
+  return hasCollectionArt(it) ? `images/collection/${esc(encodeURIComponent(it.id))}.png` : itemIconPath(it);
+}
 function mapImagePath(codigo){
   return codigo ? `images/maps/${esc(encodeURIComponent(codigo))}.png` : '';
 }
@@ -522,7 +530,7 @@ function itemStatsHtml(it, withPrices){
 function buildItemHtml(id){
   const it = itemById.get(Number(id)) || itemById.get(id);
   if(!it) return null;
-  const icon = itemIconPath(it);
+  const icon = itemDrawerImg(it);
   const droppedBy = (it.dropped_by || []).slice().sort((a,b)=>b.chance-a.chance);
 
   const droppedHtml = droppedBy.length ? droppedBy.map(d => {
@@ -537,7 +545,7 @@ function buildItemHtml(id){
 
   const html = `
     <div class="d-head">
-      <div class="d-icon ${isSoul(it) ? 'soul-art' : (it.tipo === 'Carta' ? 'card-art' : '')}">${iconOrFallback(icon, '?', '')}</div>
+      <div class="d-icon ${isSoul(it) ? 'soul-art' : ((it.tipo === 'Carta' || hasCollectionArt(it)) ? 'card-art' : '')}">${iconOrFallback(icon, '?', '')}</div>
       <div class="d-title">
         <div class="d-name">${esc(it.nome)}</div>
         <div class="d-sub">${copyIdHtml(it.id, "")} · ${esc(itemTipo(it))}${it.subtipo ? ' · '+esc(it.subtipo) : ''}${it.posicao ? ' · '+esc(it.posicao) : ''}</div>
