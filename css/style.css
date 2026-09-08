@@ -687,9 +687,12 @@ button:focus-visible, select:focus-visible, input:focus-visible, .card:focus-vis
 .esg-lead,.esg-p,.esg-wrap > p{color:var(--text-soft);}
 .esg-sub{color:var(--accent-bright); font-weight:600; margin-top:14px; display:block;}
 .esg-small{font-size:13px; color:var(--text-dim);}
-.esg-npc{display:flex; gap:16px; background:var(--bg-card); border:1px solid var(--line-soft);
-  border-radius:var(--radius); padding:16px; margin-bottom:12px; flex-wrap:wrap;}
-.esg-npc-art img{width:90px; height:auto; object-fit:contain;}
+.esg-npc{display:flex; gap:16px; align-items:flex-start; background:var(--bg-card);
+  border:1px solid var(--line-soft); border-radius:var(--radius); padding:16px; margin-bottom:12px;}
+.esg-npc-art{flex:0 0 auto;}
+/* min-width:0 deixa o texto/tabela encolher em vez de empurrar o sprite p/ baixo */
+.esg-npc-info{flex:1 1 0%; min-width:0;}
+.esg-npc-art img{width:96px; height:auto; object-fit:contain;}
 .esg-npc-name{font-family:var(--font-display); color:var(--accent-bright); font-size:20px;}
 .esg-npc-sub{color:var(--text-dim); font-family:var(--font-mono); font-size:13px; margin-bottom:8px;}
 .esg-feat{margin:0; padding-left:18px; color:var(--text-soft);}
@@ -734,3 +737,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, .card:focus-vis
 /* cores fixas inline (azul/cinza) ilegíveis no tema escuro -> tokens */
 .esg-wrap span[style*="0000FF"]{color:var(--accent-bright) !important;}
 .esg-wrap span[style*="777777"]{color:var(--text-dim) !important;}
+@media (max-width:640px){
+  .esg-npc{flex-direction:column;}
+  .esg-boss{flex-direction:column;}
+}
